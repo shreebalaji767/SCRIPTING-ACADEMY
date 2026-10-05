@@ -7,13 +7,14 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build-apk:
-
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout source code
         uses: actions/checkout@v4
 
@@ -31,9 +32,22 @@ jobs:
       - name: Build Debug APK
         run: gradle assembleDebug --no-daemon
 
-      - name: Upload APK
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Scripting-Academy-APK
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+      - name: Publish Permanent GitHub Release
+        if: github.event_name == 'push' && contains(github.event.head_commit.message, 'Release Scripting Academy V15 APK')
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v15.0
+          name: Scripting Academy V15.0
+          body: |
+            Scripting Academy V15.0 Android APK.
+
+            Android APK only. No Windows EXE.
+          files: app/build/outputs/apk/debug/app-debug.apk
+          overwrite_files: true
