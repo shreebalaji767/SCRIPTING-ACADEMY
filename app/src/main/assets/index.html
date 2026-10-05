@@ -284,32 +284,11 @@ function renderDaily(){var el=document.getElementById("dailyChallenge");if(!el)r
 function enhancedProgress(){if(typeof renderProgress==="function")renderProgress();var d=document.getElementById("progressDone"),xp=document.getElementById("progressXP"),st=document.getElementById("progressStreak");if(d)d.textContent=Object.keys(state.done).length;if(xp)xp.textContent=state.score;if(st)st.textContent=state.streak||0;}
 updateStats();renderCourses();renderQuiz();applyPrefs();renderDaily();renderAchievements();renderReview();renderProjects();renderExam();renderLab();renderMistakes();renderRoadmap();renderDiagnostic();renderLabCenter();
 </script><script>
-async function realHealth(){
- const base=(document.getElementById('rwUrl').value||'').replace(/\/$/,'');
- const o=document.getElementById('rwOutput'); o.textContent='Checking real Windows toolchain…';
- try{const r=await fetch(base+'/health',{headers:{'X-Academy-Token':document.getElementById('rwToken').value}}); const j=await r.json(); o.textContent=JSON.stringify(j,null,2);}
- catch(e){o.textContent='NOT CONNECTED\n'+e+'\n\nUse the Windows PC LAN IP, not 127.0.0.1 from Android.';}
-}
-function realStarter(){
- const l=document.getElementById('rwLang').value;
- const starters={
- c:'#include <stdio.h>\nint main(void) {\n    printf("Hello from REAL GCC\\n");\n    return 0;\n}',
- cpp:'#include <iostream>\nint main() {\n    std::cout << "Hello from REAL G++\\n";\n    return 0;\n}',
- python:'print("Hello from REAL Python")',
- javascript:'console.log("Hello from REAL Node.js");'};
- document.getElementById('rwCode').value=starters[l];
-}
-async function realRun(){
- const base=(document.getElementById('rwUrl').value||'').replace(/\/$/,'');
- const language=document.getElementById('rwLang').value;
- const source=document.getElementById('rwCode').value;
- const o=document.getElementById('rwOutput');
- o.textContent='Sending source to REAL Windows Lab Agent…';
- try{
-   const r=await fetch(base+'/run',{method:'POST',headers:{'Content-Type':'application/json','X-Academy-Token':document.getElementById('rwToken').value},body:JSON.stringify({language,source})});
-   const j=await r.json(); o.textContent=JSON.stringify(j,null,2);
- }catch(e){
-   o.textContent='REAL EXECUTION DID NOT HAPPEN.\n'+e+'\n\nCheck the PC IP, Windows firewall, and that windows-lab-agent.py is running.';
- }
-}
+function setTruth(label,explain){var a=document.getElementById('rwTruth'),b=document.getElementById('rwExplanation');if(a)a.textContent=label;if(b)b.textContent=explain;}
+function renderRealHistory(){var el=document.getElementById('rwHistory');if(!el)return;var h=JSON.parse(localStorage.getItem('academyRealRunsV1')||'[]');el.innerHTML=h.length?h.map(function(x){return '<div class="card" style="margin-top:8px"><div class="toprow"><b>'+x.language.toUpperCase()+'</b><span class="badge">'+x.truth+'</span></div><small>'+new Date(x.at).toLocaleString()+' • exit '+x.exit+'</small><br><small>'+esc(x.summary)+'</small></div>';}).join(''):'<p class="muted">No real runs recorded on this device yet.</p>'; }
+function saveRealHistory(x){var h=JSON.parse(localStorage.getItem('academyRealRunsV1')||'[]');h.unshift(x);localStorage.setItem('academyRealRunsV1',JSON.stringify(h.slice(0,12)));renderRealHistory();}
+function realHealth(){var base=(document.getElementById('rwUrl').value||'').replace(/\/$/,'');var o=document.getElementById('rwOutput');setTruth('CHECKING','Contacting the Windows Lab Agent…');fetch(base+'/health',{headers:{'X-Academy-Token':document.getElementById('rwToken').value}}).then(async function(r){var j=await r.json();o.textContent=JSON.stringify(j,null,2);setTruth(r.ok?'CONNECTED':'AUTH ERROR',r.ok?'Real Windows toolchains detected.':'The agent rejected the token or request.');}).catch(function(e){setTruth('NOT CONNECTED','No Windows execution occurred. Check PC IP, firewall and agent.');o.textContent='NOT CONNECTED\n'+e+'\n\nUse the Windows PC LAN IP, not 127.0.0.1 from Android.';});}
+function realStarter(){var l=document.getElementById('rwLang').value;var starters={c:'#include <stdio.h>\nint main(void) {\n    printf("Hello from REAL GCC\\n");\n    return 0;\n}',cpp:'#include <iostream>\nint main() {\n    std::cout << "Hello from REAL G++\\n";\n    return 0;\n}',python:'print("Hello from REAL Python")',javascript:'console.log("Hello from REAL Node.js");'};document.getElementById('rwCode').value=starters[l];setTruth('READY','Starter loaded. It has not executed yet.');}
+function realRun(){var base=(document.getElementById('rwUrl').value||'').replace(/\/$/,'');var language=document.getElementById('rwLang').value;var source=document.getElementById('rwCode').value;var o=document.getElementById('rwOutput');if(!base||!source.trim()){setTruth('NOT EXECUTED','Enter the Windows Lab Agent address and source code first.');return;}o.textContent='Sending source to REAL Windows Lab Agent…';setTruth('RUNNING','Source sent to Windows. Waiting for the real result…');fetch(base+'/run',{method:'POST',headers:{'Content-Type':'application/json','X-Academy-Token':document.getElementById('rwToken').value},body:JSON.stringify({language:language,source:source})}).then(async function(r){var j=await r.json();o.textContent=JSON.stringify(j,null,2);var rr=j.result||{},run=rr.run,exit=run?run.exit_code:rr.exit_code;var truth=(r.ok&&j.ok)?'REAL':'NOT EXECUTED';var summary=run?(run.exit_code===0?'REAL EXECUTION: program completed with exit code 0.':'REAL EXECUTION: program returned exit code '+run.exit_code+'. Read stdout/stderr above.'):(rr.exit_code?'REAL COMPILER RESULT: compilation failed.':'REAL TOOLCHAIN RESULT received.');setTruth(truth,summary);saveRealHistory({language:language,truth:truth,exit:exit===undefined?'?':exit,summary:summary,at:Date.now()});}).catch(function(e){setTruth('NOT EXECUTED','REAL execution did not happen. '+e);o.textContent='REAL EXECUTION DID NOT HAPPEN.\n'+e+'\n\nCheck PC IP, Windows firewall, token and agent.';});}
+renderRealHistory();
 </script></body></html>
