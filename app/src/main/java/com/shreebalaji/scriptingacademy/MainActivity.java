@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
 
         @JavascriptInterface
         public String version() {
-            return "REAL-LAB-V9";
+            return "REAL-LAB-V10";
         }
     }
 
@@ -49,7 +49,6 @@ public class MainActivity extends Activity {
 
             @Override public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                injectRealLab();
             }
 
             @Override public boolean onRenderProcessGone(WebView view, android.webkit.RenderProcessGoneDetail detail) {
