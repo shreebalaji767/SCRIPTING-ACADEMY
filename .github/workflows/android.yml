@@ -35,19 +35,23 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Scripting-Academy-APK
+          name: Scripting-Academy-APK-V16
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+          retention-days: 30
 
       - name: Publish Permanent GitHub Release
-        if: github.event_name == 'push' && contains(github.event.head_commit.message, 'Release Scripting Academy V15 APK')
+        if: github.event_name == 'push' && contains(github.event.head_commit.message, 'Release Scripting Academy V16 APK')
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v15.0
-          name: Scripting Academy V15.0
+          tag_name: v16.0
+          name: Scripting Academy V16.0
           body: |
-            Scripting Academy V15.0 Android APK.
+            Scripting Academy V16.0 Android APK.
 
             Android APK only. No Windows EXE.
+
+            V16 adds a stronger Android runtime bridge, capability reporting,
+            offline bundled-asset reporting and WebView load-error handling.
           files: app/build/outputs/apk/debug/app-debug.apk
           overwrite_files: true
