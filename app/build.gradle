@@ -4,11 +4,11 @@ def hasReleaseSigning = [System.getenv('PLAY_STORE_KEYSTORE_BASE64'), System.get
 
 android {
     namespace 'com.shreebalaji.scriptingacademy'
-    compileSdk 35
+    compileSdk 36
     defaultConfig {
         applicationId 'com.shreebalaji.scriptingacademy'
         minSdk 24
-        targetSdk 35
+        targetSdk 36
         versionCode 18
         versionName '18.0'
     }
