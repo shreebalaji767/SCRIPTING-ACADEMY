@@ -26,7 +26,8 @@ import argparse
 
 HOST = "127.0.0.1"
 PORT = 8765
-TOKEN = secrets.token_urlsafe(18)\nVERSION = "10.0"
+TOKEN = secrets.token_urlsafe(18)
+VERSION = "10.0"
 MAX_SOURCE = 200_000
 TIMEOUT = 8
 
@@ -69,7 +70,8 @@ class Handler(BaseHTTPRequestHandler):
                 "platform": "Windows",
                 "host": HOST,
                 "port": PORT,
-                "tools": {k: {"command": v[0], "path": shutil.which(v[0]), "available": bool(shutil.which(v[0]))} for k, v in TOOLS.items()},\n                "limits": {"max_source_bytes": MAX_SOURCE, "timeout_seconds": TIMEOUT},
+                "tools": {k: {"command": v[0], "path": shutil.which(v[0]), "available": bool(shutil.which(v[0]))} for k, v in TOOLS.items()},
+                "limits": {"max_source_bytes": MAX_SOURCE, "timeout_seconds": TIMEOUT},
             })
             return
         self.send_json(404, {"ok": False, "error": "Use /health or POST /run"})
@@ -159,7 +161,15 @@ class Handler(BaseHTTPRequestHandler):
             }
 
 if __name__ == "__main__":
-    print(f"Scripting Academy REAL LAB V10 listening on http://{HOST}:{PORT}")\n    print(f"LAB TOKEN: {TOKEN}")
+    print(f"Scripting Academy REAL LAB V10 listening on http://{HOST}:{PORT}")
+    print(f"LAB TOKEN: {TOKEN}")
     print("Use the LAN address only on a trusted network. Anyone with the token can submit code for execution.")
     print("Press Ctrl+C to stop.")
-    server = ThreadingHTTPServer((HOST, PORT), Handler)\n    try:\n        server.serve_forever()\n    except KeyboardInterrupt:\n        print("\\nStopping REAL LAB agent.")\n    finally:\n        server.server_close()
+    server = ThreadingHTTPServer((HOST, PORT), Handler)
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("\
+Stopping REAL LAB agent.")
+    finally:
+        server.server_close()
