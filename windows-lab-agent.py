@@ -126,6 +126,20 @@ class Handler(BaseHTTPRequestHandler):
         })
 
     def do_POST(self):
+        if self.path == "/terminal":
+            if not self.authorized(): return self.send_json(401, {"ok": False, "error": "Invalid Lab Token"})
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                payload = json.loads(self.rfile.read(length).decode("utf-8"))
+                command = str(payload.get("command", "")).strip()
+                allow = ["dir", "cd", "echo", "ver", "whoami", "ipconfig", "ping", "nslookup", "tasklist", "where", "python --version", "py --version", "node --version", "gcc --version", "g++ --version"]
+                base = command.lower().split()[0] if command else ""
+                if not command or not any(command.lower() == x or command.lower().startswith(x + " ") for x in allow):
+                    return self.send_json(400, {"ok": False, "error": "Command not allowed by the learning terminal allowlist."})
+                r = run_process(["cmd.exe", "/d", "/c", command], os.getcwd())
+                return self.send_json(200, {"ok": True, "command": command, "result": r})
+            except Exception as e:
+                return self.send_json(500, {"ok": False, "error": "Terminal error: " + str(e)})
         if self.path != "/run":
             return self.send_json(404, {"ok": False, "error": "Not found"})
         if not self.authorized():
