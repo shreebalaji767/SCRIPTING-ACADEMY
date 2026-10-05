@@ -30,7 +30,7 @@ jobs:
           KEYSTORE_B64: ${{ secrets.PLAY_STORE_KEYSTORE_BASE64 }}
         run: echo "$KEYSTORE_B64" | base64 --decode > play-upload.jks
       - name: Verify signing secrets
-        if: ${{ secrets.PLAY_STORE_KEYSTORE_BASE64 != '' }}
+        if: env.HAS_PLAY_SIGNING == 'true'
         env:
           STORE_PASSWORD: ${{ secrets.PLAY_STORE_KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.PLAY_STORE_KEY_ALIAS }}
