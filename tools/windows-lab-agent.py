@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Scripting Academy REAL LAB V8 — Windows companion agent.
+Scripting Academy REAL LAB V10 — Windows companion agent.
 
 Run on the Windows PC:
     py tools/windows-lab-agent.py
 
-It listens only on localhost:8765. It is intentionally small and transparent:
+It listens on localhost by default and can be bound to a LAN interface explicitly. It is intentionally small and transparent:
 the Academy sends source code, this agent invokes the selected local toolchain,
 captures stdout/stderr, and returns the real exit code.
 
@@ -26,7 +26,7 @@ import argparse
 
 HOST = "127.0.0.1"
 PORT = 8765
-TOKEN = secrets.token_urlsafe(18)
+TOKEN = secrets.token_urlsafe(18)\nVERSION = "10.0"
 MAX_SOURCE = 200_000
 TIMEOUT = 8
 
@@ -50,7 +50,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(204)
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Academy-Token")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.end_headers()
 
@@ -65,11 +65,11 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(200, {
                 "ok": True,
                 "name": "Scripting Academy REAL LAB",
-                "version": "8.0",
+                "version": VERSION,
                 "platform": "Windows",
                 "host": HOST,
                 "port": PORT,
-                "tools": {k: shutil.which(v[0]) or None for k, v in TOOLS.items()},
+                "tools": {k: {"command": v[0], "path": shutil.which(v[0]), "available": bool(shutil.which(v[0]))} for k, v in TOOLS.items()},\n                "limits": {"max_source_bytes": MAX_SOURCE, "timeout_seconds": TIMEOUT},
             })
             return
         self.send_json(404, {"ok": False, "error": "Use /health or POST /run"})
@@ -159,7 +159,7 @@ class Handler(BaseHTTPRequestHandler):
             }
 
 if __name__ == "__main__":
-    print(f"Scripting Academy REAL LAB V8 listening on http://{HOST}:{PORT}")
-    print("Open that address only from this PC; the Android app can connect to it when the PC is reachable.")
+    print(f"Scripting Academy REAL LAB V10 listening on http://{HOST}:{PORT}")\n    print(f"LAB TOKEN: {TOKEN}")
+    print("Use the LAN address only on a trusted network. Anyone with the token can submit code for execution.")
     print("Press Ctrl+C to stop.")
-    ThreadingHTTPServer((HOST, PORT), Handler).serve_forever()
+    server = ThreadingHTTPServer((HOST, PORT), Handler)\n    try:\n        server.serve_forever()\n    except KeyboardInterrupt:\n        print("\\nStopping REAL LAB agent.")\n    finally:\n        server.server_close()
