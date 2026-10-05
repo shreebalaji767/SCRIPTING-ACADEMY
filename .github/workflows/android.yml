@@ -35,6 +35,11 @@ jobs:
       - name: Build debug APK
         run: gradle assembleDebug --no-daemon
       - name: Build Play release AAB
+        env:
+          PLAY_STORE_KEYSTORE_BASE64: ${{ secrets.PLAY_STORE_KEYSTORE_BASE64 }}
+          PLAY_STORE_KEYSTORE_PASSWORD: ${{ secrets.PLAY_STORE_KEYSTORE_PASSWORD }}
+          PLAY_STORE_KEY_ALIAS: ${{ secrets.PLAY_STORE_KEY_ALIAS }}
+          PLAY_STORE_KEY_PASSWORD: ${{ secrets.PLAY_STORE_KEY_PASSWORD }}
         run: gradle bundleRelease --no-daemon
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
