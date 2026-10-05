@@ -1,5 +1,5 @@
 plugins { id 'com.android.application' }
 
 android { namespace 'com.shreebalaji.scriptingacademy'; compileSdk 35
-    defaultConfig { applicationId 'com.shreebalaji.scriptingacademy'; minSdk 23; targetSdk 35; versionCode 1; versionName '1.0' }
+    defaultConfig { applicationId 'com.shreebalaji.scriptingacademy'; minSdk 23; targetSdk 35; versionCode 4; versionName '4.0' }
 }
