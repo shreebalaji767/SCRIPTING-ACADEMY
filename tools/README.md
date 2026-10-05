@@ -1,4 +1,4 @@
-# Scripting Academy — REAL LAB V8
+# Scripting Academy — REAL LAB V10
 
 Scripting Academy is an offline-first learning app. V8 changes the Code Lab philosophy:
 
@@ -22,11 +22,9 @@ Run on a Windows PC with the required tools installed:
 py tools/windows-lab-agent.py
 ```
 
-It listens on:
+It listens on `127.0.0.1:8765` by default. For Android/LAN access, start it explicitly with `py tools\\windows-lab-agent.py --host 0.0.0.0`. The agent prints a random **Lab Token** at startup; enter that token in the app. Keep the token private.
 
-`http://127.0.0.1:8765`
-
-The Android app's **REAL LAB V8 → Connect Windows Lab Agent** panel can test the connection.
+The Android app's **REAL LAB V10 → Connect Windows Lab Agent** panel can test the connection.
 
 ### Supported real toolchains
 
@@ -35,7 +33,7 @@ The Android app's **REAL LAB V8 → Connect Windows Lab Agent** panel can test t
 - Python → Python
 - JavaScript → Node.js
 
-The agent captures:
+The V10 workbench also records an on-device execution history and shows an **Execution Truth** badge (`REAL`, `CONNECTED`, `NOT EXECUTED`, etc.).\n\nThe agent captures:
 
 - real compiler output
 - real runtime output
