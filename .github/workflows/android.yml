@@ -8,6 +8,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      HAS_PLAY_SIGNING: ${{ secrets.PLAY_STORE_KEYSTORE_BASE64 != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -22,7 +24,7 @@ jobs:
       - name: Install Android 16 SDK
         run: sdkmanager "platforms;android-36" "build-tools;35.0.0"
       - name: Decode Play upload keystore
-        if: ${{ secrets.PLAY_STORE_KEYSTORE_BASE64 != '' }}
+        if: env.HAS_PLAY_SIGNING == 'true'
         shell: bash
         env:
           KEYSTORE_B64: ${{ secrets.PLAY_STORE_KEYSTORE_BASE64 }}
@@ -48,7 +50,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Publish V18 signed release
-        if: ${{ github.event_name == 'push' && secrets.PLAY_STORE_KEYSTORE_BASE64 != '' }}
+        if: ${{ github.event_name == 'push' && env.HAS_PLAY_SIGNING == 'true' }}
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v18.0
