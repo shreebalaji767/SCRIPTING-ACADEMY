@@ -1,5 +1,7 @@
 plugins { id 'com.android.application' }
 
+def hasReleaseSigning = [System.getenv('PLAY_STORE_KEYSTORE_BASE64'), System.getenv('PLAY_STORE_KEYSTORE_PASSWORD'), System.getenv('PLAY_STORE_KEY_ALIAS'), System.getenv('PLAY_STORE_KEY_PASSWORD')].every { it != null && !it.trim().isEmpty() }
+
 android {
     namespace 'com.shreebalaji.scriptingacademy'
     compileSdk 35
@@ -7,8 +9,24 @@ android {
         applicationId 'com.shreebalaji.scriptingacademy'
         minSdk 24
         targetSdk 35
-        versionCode 17
-        versionName '17.0'
+        versionCode 18
+        versionName '18.0'
+    }
+    if (hasReleaseSigning) {
+        signingConfigs {
+            release {
+                storeFile file(project.rootDir.toString() + '/play-upload.jks')
+                storePassword System.getenv('PLAY_STORE_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('PLAY_STORE_KEY_ALIAS')
+                keyPassword System.getenv('PLAY_STORE_KEY_PASSWORD')
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (hasReleaseSigning) { signingConfig signingConfigs.release }
+        }
     }
 }
 
