@@ -17,7 +17,7 @@
 <h3>⚡ REAL WORKBENCH V9</h3>
 <p class="muted">Connect to a Windows Lab Agent and run supported languages with the real local toolchain. No fake compiler messages.</p>
 <div class="grid">
-<div><label>Windows PC address</label><input id="rwUrl" class="search" value="http://192.168.1.100:8765" placeholder="http://PC-IP:8765"></div>
+<div><label>Windows PC address</label><input id="rwUrl" class="search" value="http://192.168.1.100:8765" placeholder="http://PC-IP:8765"><label>Lab Token</label><input id="rwToken" class="search" type="password" placeholder="Token printed by windows-lab-agent.py"></div>
 <div><label>Language</label><select id="rwLang" class="search"><option value="c">C / GCC</option><option value="cpp">C++ / G++</option><option value="python">Python</option><option value="javascript">JavaScript / Node.js</option></select></div>
 </div>
 <textarea id="rwCode" class="ide" spellcheck="false"># Write code here</textarea>
@@ -287,7 +287,7 @@ updateStats();renderCourses();renderQuiz();applyPrefs();renderDaily();renderAchi
 async function realHealth(){
  const base=(document.getElementById('rwUrl').value||'').replace(/\/$/,'');
  const o=document.getElementById('rwOutput'); o.textContent='Checking real Windows toolchain…';
- try{const r=await fetch(base+'/health'); const j=await r.json(); o.textContent=JSON.stringify(j,null,2);}
+ try{const r=await fetch(base+'/health',{headers:{'X-Academy-Token':document.getElementById('rwToken').value}}); const j=await r.json(); o.textContent=JSON.stringify(j,null,2);}
  catch(e){o.textContent='NOT CONNECTED\n'+e+'\n\nUse the Windows PC LAN IP, not 127.0.0.1 from Android.';}
 }
 function realStarter(){
@@ -306,7 +306,7 @@ async function realRun(){
  const o=document.getElementById('rwOutput');
  o.textContent='Sending source to REAL Windows Lab Agent…';
  try{
-   const r=await fetch(base+'/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({language,source})});
+   const r=await fetch(base+'/run',{method:'POST',headers:{'Content-Type':'application/json','X-Academy-Token':document.getElementById('rwToken').value},body:JSON.stringify({language,source})});
    const j=await r.json(); o.textContent=JSON.stringify(j,null,2);
  }catch(e){
    o.textContent='REAL EXECUTION DID NOT HAPPEN.\n'+e+'\n\nCheck the PC IP, Windows firewall, and that windows-lab-agent.py is running.';
