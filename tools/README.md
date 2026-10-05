@@ -1,4 +1,4 @@
-# Scripting Academy — REAL LAB V10
+# Scripting Academy — REAL LAB V12
 
 Scripting Academy is an offline-first learning app. V8 changes the Code Lab philosophy:
 
@@ -72,3 +72,8 @@ The Academy is allowed to say:
 **NOT EXECUTED**
 
 That is a feature, not a failure.
+
+
+## V12 Project Workspace
+
+V12 adds a local multi-file Project Workspace with file management, templates, local save/load and JSON export. The selected file can be sent through the existing authenticated Windows Lab Agent for real execution. Editing and saving are explicitly NOT EXECUTED.
