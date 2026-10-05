@@ -1,49 +1,64 @@
-name: Build Scripting Academy APK
-
+name: Build and Release Scripting Academy
 on:
   workflow_dispatch:
   push:
     branches: [main]
-
 permissions:
   contents: write
-
 jobs:
-  build-apk:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-      - name: Install Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.10'
-      - name: Build V17 APK
+      - name: Decode Play upload keystore
+        if: ${{ secrets.PLAY_STORE_KEYSTORE_BASE64 != '' }}
+        shell: bash
+        env:
+          KEYSTORE_B64: ${{ secrets.PLAY_STORE_KEYSTORE_BASE64 }}
+        run: echo "$KEYSTORE_B64" | base64 --decode > play-upload.jks
+      - name: Verify signing secrets
+        if: ${{ secrets.PLAY_STORE_KEYSTORE_BASE64 != '' }}
+        env:
+          STORE_PASSWORD: ${{ secrets.PLAY_STORE_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.PLAY_STORE_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.PLAY_STORE_KEY_PASSWORD }}
+        run: test -n "$STORE_PASSWORD" && test -n "$KEY_ALIAS" && test -n "$KEY_PASSWORD"
+      - name: Build debug APK
         run: gradle assembleDebug --no-daemon
-      - name: Upload V17 APK
+      - name: Build Play release AAB
+        run: gradle bundleRelease --no-daemon
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Scripting-Academy-APK-V17
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: Scripting-Academy-V18-builds
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
+            app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
           retention-days: 30
-      - name: Publish V17 Release
-        if: github.event_name == 'push' && contains(github.event.head_commit.message, 'Release Scripting Academy V17 REAL Lab APK')
+      - name: Require signing for public release
+        if: ${{ github.event_name == 'push' }}
+        env:
+          KEYSTORE_B64: ${{ secrets.PLAY_STORE_KEYSTORE_BASE64 }}
+        run: test -n "$KEYSTORE_B64"
+      - name: Verify AAB signature
+        if: ${{ github.event_name == 'push' }}
+        run: jarsigner -verify -verbose -certs app/build/outputs/bundle/release/app-release.aab
+      - name: Publish V18
+        if: ${{ github.event_name == 'push' }}
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v17.0
-          name: Scripting Academy V17.0 — REAL LAB
-          body: |
-            Scripting Academy V17.0.
-
-            REAL Android JavaScript execution.
-            REAL Windows Lab Agent integration for C, C++, Python and Node.js.
-            REAL allowlisted Windows learning terminal.
-            No simulated execution is reported as real.
-          files: app/build/outputs/apk/debug/app-debug.apk
+          tag_name: v18.0
+          name: Scripting Academy V18.0 — Play-ready
+          body: Play-ready AAB, target SDK 35, real lab functionality.
+          files: |
+            app/build/outputs/bundle/release/app-release.aab
+            app/build/outputs/apk/debug/app-debug.apk
           overwrite_files: true
