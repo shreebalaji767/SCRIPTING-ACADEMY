@@ -328,3 +328,91 @@ function wsExport(){wsSave();var b=new Blob([JSON.stringify(ws12,null,2)],{type:
 function wsRun(){wsSave();var f=ws12.files[ws12.active],ext=f.name.split(".").pop().toLowerCase(),lang=ext==="cpp"?"cpp":ext==="py"?"python":ext==="js"?"javascript":"c";var base=(document.getElementById("rwUrl").value||"").replace(/\/$/,""),token=document.getElementById("rwToken").value,o=document.getElementById("wsOutput");if(!base||!token){o.textContent="NOT EXECUTED — enter the Windows Lab Agent address and token in Lab Center.";return;}o.textContent="RUNNING — sending selected file to Windows…";document.getElementById("wsTruth").textContent="RUNNING";fetch(base+"/run",{method:"POST",headers:{"Content-Type":"application/json","X-Academy-Token":token},body:JSON.stringify({language:lang,source:f.source,tests:[]})}).then(async function(r){var j=await r.json();o.textContent=JSON.stringify(j,null,2);document.getElementById("wsTruth").textContent=r.ok&&j.ok?"REAL":"NOT EXECUTED";}).catch(function(e){o.textContent="REAL EXECUTION DID NOT HAPPEN.\n"+e;document.getElementById("wsTruth").textContent="NOT EXECUTED";});}
 wsInit();
 </script></body></html>
+<script>
+/* V17 REAL FUNCTIONALITY LAYER
+   The app never reports simulated execution as real.
+*/
+(function(){
+  function qs(id){return document.getElementById(id);}
+  function agentBase(){return (qs("rwUrl")?.value||"").trim().replace(/\/$/,"");}
+  function agentToken(){return qs("rwToken")?.value||"";}
+  function saveAgent(){localStorage.setItem("academyAgentV17",JSON.stringify({url:agentBase(),token:agentToken()}));}
+  function loadAgent(){
+    try{
+      var x=JSON.parse(localStorage.getItem("academyAgentV17")||"null");
+      if(x){if(qs("rwUrl"))qs("rwUrl").value=x.url||"";if(qs("rwToken"))qs("rwToken").value=x.token||"";}
+    }catch(e){}
+  }
+  function status(msg){var o=qs("ideOutput");if(o)o.textContent=msg;}
+
+  window.realHealth=function(){
+    var base=agentBase(), token=agentToken();
+    if(!base||!token){setTruth("NOT CONNECTED","Enter the Windows PC address and Lab Token.");qs("rwOutput").textContent="NOT CONNECTED\nEnter the Windows Lab Agent address and token.";return;}
+    saveAgent();setTruth("CHECKING","Contacting the real Windows Lab Agent...");
+    qs("rwOutput").textContent="CHECKING REAL WINDOWS TOOLCHAINS...";
+    fetch(base+"/health",{headers:{"X-Academy-Token":token}})
+      .then(async function(r){var j=await r.json();qs("rwOutput").textContent=JSON.stringify(j,null,2);setTruth(r.ok&&j.ok?"CONNECTED":"AUTH ERROR",r.ok&&j.ok?"REAL Windows Lab Agent connected.":"The real agent rejected the request.");})
+      .catch(function(e){qs("rwOutput").textContent="NOT CONNECTED\n"+e+"\n\nStart windows-lab-agent.py on Windows and use the PC LAN IP.";setTruth("NOT CONNECTED","No program executed.");});
+  };
+
+  window.runIDE=function(){
+    var env=window.activeEnv||"JavaScript";
+    var code=(qs("ideCode")?.value||"").trim();
+    if(!code){status("NOT EXECUTED\nWrite code first.");return;}
+    if(env==="JavaScript"){
+      try{
+        var logs=[], old=console.log, oldErr=console.error;
+        console.log=function(){logs.push(Array.prototype.slice.call(arguments).join(" "));};
+        console.error=function(){logs.push("ERROR: "+Array.prototype.slice.call(arguments).join(" "));};
+        var result=Function(code)();
+        console.log=old;console.error=oldErr;
+        if(result!==undefined)logs.push("=> "+String(result));
+        status("REAL ANDROID JAVASCRIPT EXECUTION\n"+(logs.join("\n")||"Program completed with no console output."));
+        setTruth("REAL","JavaScript executed inside Android WebView.");
+      }catch(e){status("REAL JAVASCRIPT ERROR\n"+e.name+": "+e.message);setTruth("REAL ERROR","JavaScript actually executed and threw an error.");}
+      return;
+    }
+    var map={C:"c","C++":"cpp",Python:"python",JavaScript:"javascript"};
+    if(!map[env]){status("NOT EXECUTED\n"+env+" is a lesson environment, not a local Android compiler. Use C/C++/Python/JavaScript with the Windows Lab Agent for real execution.");setTruth("NOT EXECUTED","No fake execution is performed.");return;}
+    qs("rwLang").value=map[env];qs("rwCode").value=code;realRun();
+  };
+
+  window.runTerminal=function(){
+    var input=qs("terminalInput"),cmd=(input?.value||"").trim(),out=qs("terminalOutput");
+    if(!cmd)return;
+    if(cmd.toLowerCase()==="clear"||cmd.toLowerCase()==="cls"){out.textContent="REAL Windows terminal ready.";input.value="";return;}
+    if(cmd.toLowerCase()==="help"){out.textContent="REAL commands: dir, cd, echo, ver, whoami, ipconfig, ping, nslookup, tasklist, where, python --version, node --version, gcc --version, g++ --version";input.value="";return;}
+    var base=agentBase(),token=agentToken();
+    if(!base||!token){out.textContent="NOT EXECUTED\nConnect the Windows Lab Agent in REAL WORKBENCH first.";return;}
+    saveAgent();out.textContent+="\n> "+cmd+"\nRUNNING ON REAL WINDOWS...";
+    fetch(base+"/terminal",{method:"POST",headers:{"Content-Type":"application/json","X-Academy-Token":token},body:JSON.stringify({command:cmd})})
+      .then(async function(r){var j=await r.json();var rr=j.result||{};out.textContent+=(r.ok&&j.ok?"\nREAL RESULT\n":"\nNOT EXECUTED\n")+(rr.stdout||"")+(rr.stderr?"\n"+rr.stderr:"")+(j.error?"\n"+j.error:"");})
+      .catch(function(e){out.textContent+="\nNOT EXECUTED\n"+e;});
+    input.value="";
+  };
+
+  window.wsRun=function(){
+    wsSave();
+    var f=ws12.files[ws12.active],ext=f.name.split(".").pop().toLowerCase();
+    var lang={c:"c",h:"c",cpp:"cpp",cc:"cpp",cxx:"cpp",py:"python",js:"javascript",mjs:"javascript"}[ext];
+    var o=qs("wsOutput");
+    if(!lang){o.textContent="NOT EXECUTED\nUnsupported runnable extension: ."+ext;qs("wsTruth").textContent="NOT EXECUTED";return;}
+    var base=agentBase(),token=agentToken();
+    if(!base||!token){o.textContent="NOT EXECUTED\nEnter the Windows Lab Agent address and token in Lab Center.";qs("wsTruth").textContent="NOT EXECUTED";return;}
+    o.textContent="RUNNING — sending source to REAL Windows...";
+    qs("wsTruth").textContent="RUNNING";
+    fetch(base+"/run",{method:"POST",headers:{"Content-Type":"application/json","X-Academy-Token":token},body:JSON.stringify({language:lang,source:f.source,tests:[]})})
+      .then(async function(r){var j=await r.json();o.textContent=JSON.stringify(j,null,2);qs("wsTruth").textContent=r.ok&&j.ok?"REAL":"NOT EXECUTED";})
+      .catch(function(e){o.textContent="REAL EXECUTION DID NOT HAPPEN.\n"+e;qs("wsTruth").textContent="NOT EXECUTED";});
+  };
+
+  function makeV17Banner(){
+    var host=qs("realWorkbench");if(!host||qs("v17TruthBanner"))return;
+    var d=document.createElement("div");d.id="v17TruthBanner";d.className="card";
+    d.style.marginTop="12px";
+    d.innerHTML="<b>🔴 V17 REAL MODE</b><p class='muted'>C/C++/Python/Node run on your Windows PC through the Lab Agent. JavaScript runs directly inside Android WebView. Other environments teach concepts without pretending to execute them.</p><button class='btn' onclick='realHealth()'>🩺 Connect & Check Real PC</button>";
+    host.insertBefore(d,host.firstChild);
+  }
+  loadAgent();makeV17Banner();
+})();
+</script>
