@@ -17,7 +17,7 @@ public class MainActivity extends Activity {
         @JavascriptInterface public String runtime() {
             return "{\"platform\":\"Android\",\"engine\":\"Android WebView\",\"realJavaScript\":true,\"windowsExecution\":\"Windows Lab Agent\",\"fakeExecution\":false}";
         }
-        @JavascriptInterface public String version() { return "REAL-LAB-V17"; }
+        @JavascriptInterface public String version() { return "REAL-LAB-V20"; }
         @JavascriptInterface public String capabilities() {
             return "{\"apk\":true,\"webview\":true,\"javascript\":true,\"localStorage\":true,\"windowsAgent\":true,\"truthfulExecution\":true}";
         }
