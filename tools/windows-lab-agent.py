@@ -21,9 +21,12 @@ import shutil
 import subprocess
 import tempfile
 import time
+import secrets
+import argparse
 
 HOST = "127.0.0.1"
 PORT = 8765
+TOKEN = secrets.token_urlsafe(18)
 MAX_SOURCE = 200_000
 TIMEOUT = 8
 
@@ -51,8 +54,14 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.end_headers()
 
+    def authorized(self):
+        return self.headers.get("X-Academy-Token", "") == TOKEN
+
     def do_GET(self):
         if self.path == "/health":
+            if not self.authorized():
+                self.send_json(401, {"ok": False, "error": "invalid lab token"})
+                return
             self.send_json(200, {
                 "ok": True,
                 "name": "Scripting Academy REAL LAB",
@@ -66,6 +75,9 @@ class Handler(BaseHTTPRequestHandler):
         self.send_json(404, {"ok": False, "error": "Use /health or POST /run"})
 
     def do_POST(self):
+        if not self.authorized():
+            self.send_json(401, {"ok": False, "error": "invalid lab token"})
+            return
         if self.path != "/run":
             self.send_json(404, {"ok": False, "error": "Unknown endpoint"})
             return
