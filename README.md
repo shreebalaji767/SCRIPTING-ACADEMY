@@ -1,35 +1,55 @@
 # Scripting Academy
 
-A free offline Android learning app for C, scripting languages, mathematics, system administration, networking, algorithms, security, databases, web/APIs, compilers, GUI automation and software engineering.
+A free Android learning laboratory for programming, scripting, mathematics, systems, networking and administration.
 
-## 📱 Download Android APK — V16.0
+## 📱 Scripting Academy V17 — REAL LAB
 
-### ⭐ Permanent APK download
+**[⬇️ Download V17 APK](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/releases/download/v17.0/app-debug.apk)**
 
-**[⬇️ Download Scripting Academy V16.0 APK](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/releases/download/v16.0/app-debug.apk)**
+> The release is published automatically after a successful GitHub Actions build.
 
-The APK is published as a GitHub Release asset, so the release download is independent of the temporary Actions artifact.
+**[🔨 GitHub Actions](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/actions)**
 
-> **Android APK only. No Windows EXE.**
+## What is actually real?
 
-### 🔨 Build status
+### Android
+- JavaScript code executes in the Android WebView.
+- Lessons, quizzes, notes, progress, projects and workspace data persist locally.
+- The app does not claim that Android is Windows.
 
-**[Open GitHub Actions](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/actions)**
+### Windows REAL LAB
+Run `windows-lab-agent.py` on a Windows PC:
 
-Every successful build also uploads a V16 APK artifact.
+```text
+python windows-lab-agent.py --host 0.0.0.0
+```
 
-## V16 upgrade
+The agent prints a private Lab Token. Put the Windows PC LAN IP and token into **REAL WORKBENCH**.
 
-- Android APK version **16.0**
-- Stronger native-to-WebView runtime bridge
-- Runtime capability reporting
-- Explicit offline bundled-assets reporting
-- WebView main-frame load-error handling
-- Real JavaScript remains executable inside Android WebView
-- Windows C/C++/Python/Node execution remains explicitly separated through the Windows Lab Agent
-- Permanent GitHub Release APK publishing
-- No fake claim that Android is executing Windows toolchains
+The app can then genuinely execute:
+
+- C → GCC
+- C++ → G++
+- Python
+- JavaScript → Node.js
+- approved Windows learning-terminal commands
+
+Compilation/runtime stdout, stderr, exit codes and timeouts come from the real Windows process.
+
+### Truth rule
+
+Scripting Academy V17 does **not** turn an analysis into a fake execution result.
+
+If something cannot execute, the app says:
+
+`NOT EXECUTED`
+
+and explains why.
+
+## ⚠️ Windows agent security
+
+The Lab Agent executes submitted source code on the Windows PC. Run it only on a trusted machine/LAN and never expose it directly to the public Internet. Keep the generated Lab Token private.
 
 ## No Android Studio required
 
-The repository builds the APK through GitHub Actions. The primary deliverable is the **Android APK**, not a Windows executable.
+GitHub Actions builds the APK automatically.
