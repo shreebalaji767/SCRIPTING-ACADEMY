@@ -2,32 +2,34 @@
 
 A free offline Android learning app for C, scripting languages, mathematics, system administration, networking, algorithms, security, databases, web/APIs, compilers, GUI automation and software engineering.
 
-## 📱 Download Android APK — V15.0
+## 📱 Download Android APK — V16.0
 
 ### ⭐ Permanent APK download
 
-**[⬇️ Download Scripting Academy V15.0 APK](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/releases/download/v15.0/app-debug.apk)**
+**[⬇️ Download Scripting Academy V16.0 APK](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/releases/download/v16.0/app-debug.apk)**
 
-The APK is published as a GitHub Release asset, so this download link does **not** depend on the 90-day GitHub Actions artifact expiration.
+The APK is published as a GitHub Release asset, so the release download is independent of the temporary Actions artifact.
 
 > **Android APK only. No Windows EXE.**
 
-### Build status
+### 🔨 Build status
 
-The project also uploads the APK as a GitHub Actions artifact after every successful build.
+**[Open GitHub Actions](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/actions)**
 
-**[🔨 Open GitHub Actions](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/actions)**
+Every successful build also uploads a V16 APK artifact.
+
+## V16 upgrade
+
+- Android APK version **16.0**
+- Stronger native-to-WebView runtime bridge
+- Runtime capability reporting
+- Explicit offline bundled-assets reporting
+- WebView main-frame load-error handling
+- Real JavaScript remains executable inside Android WebView
+- Windows C/C++/Python/Node execution remains explicitly separated through the Windows Lab Agent
+- Permanent GitHub Release APK publishing
+- No fake claim that Android is executing Windows toolchains
 
 ## No Android Studio required
 
-This repository includes a GitHub Actions workflow. Push the project to GitHub or run the workflow manually, wait for the green check, then download the APK from the Actions artifact or the permanent GitHub Release.
-
-## V15 upgrade
-
-- Android version bumped to **15.0**
-- Permanent GitHub Release APK publishing
-- README contains a direct APK download URL
-- Actions artifact remains available as a build copy
-- Android APK remains the primary deliverable
-
-**Release status:** V15 release is generated automatically by the successful release build.
+The repository builds the APK through GitHub Actions. The primary deliverable is the **Android APK**, not a Windows executable.
