@@ -328,7 +328,26 @@ function wsLoadProject(){var x=localStorage.getItem("academyWorkspaceV12");if(!x
 function wsExport(){wsSave();var b=new Blob([JSON.stringify(ws12,null,2)],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=ws12.name+".json";document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},500);}
 function wsRun(){wsSave();var f=ws12.files[ws12.active],ext=f.name.split(".").pop().toLowerCase(),lang=ext==="cpp"?"cpp":ext==="py"?"python":ext==="js"?"javascript":"c";var base=(document.getElementById("rwUrl").value||"").replace(/\/$/,""),token=document.getElementById("rwToken").value,o=document.getElementById("wsOutput");if(!base||!token){o.textContent="NOT EXECUTED — enter the Windows Lab Agent address and token in Lab Center.";return;}o.textContent="RUNNING — sending selected file to Windows…";document.getElementById("wsTruth").textContent="RUNNING";fetch(base+"/run",{method:"POST",headers:{"Content-Type":"application/json","X-Academy-Token":token},body:JSON.stringify({language:lang,source:f.source,tests:[]})}).then(async function(r){var j=await r.json();o.textContent=JSON.stringify(j,null,2);document.getElementById("wsTruth").textContent=r.ok&&j.ok?"REAL":"NOT EXECUTED";}).catch(function(e){o.textContent="REAL EXECUTION DID NOT HAPPEN.\n"+e;document.getElementById("wsTruth").textContent="NOT EXECUTED";});}
 wsInit();
-</script></body></html>
+</script><script>
+/* V21 APK LEGACY WINDOWS ACADEMY */
+(function(){
+var S={
+batch:'@echo off\necho Hello from REAL Windows Batch\nver\nwhoami',
+vbscript:'Option Explicit\nDim shell\nSet shell = CreateObject("WScript.Shell")\nWScript.Echo "Hello from REAL VBScript"\nWScript.Echo shell.ExpandEnvironmentStrings("%USERNAME%")',
+jscript:'var shell = new ActiveXObject("WScript.Shell");\nWScript.Echo("Hello from REAL Windows JScript");\nWScript.Echo(shell.ExpandEnvironmentStrings("%USERNAME%"));',
+wsf:'<?xml version="1.0"?>\n<job id="Academy">\n<script language="VBScript">\nWScript.Echo "Hello from REAL WSF"\n</script>\n</job>',
+hta:'<html><head><title>Scripting Academy HTA</title><HTA:APPLICATION ID="AcademyHTA" BORDER="thin" CAPTION="yes"><script language="VBScript">Sub Window_OnLoad\ndocument.getElementById("out").innerText = "REAL HTA loaded by mshta.exe"\nEnd Sub</script></head><body><h2>REAL HTA</h2><div id="out">Waiting...</div></body></html>',
+wmi:'Get-CimInstance Win32_OperatingSystem | Select-Object Caption,Version,OSArchitecture',
+registry:'Get-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer" | Select-Object PSPath',
+automation:'$os=Get-CimInstance Win32_OperatingSystem\n$disk=Get-CimInstance Win32_LogicalDisk -Filter "DeviceID=''C:''"\n[pscustomobject]@{OS=$os.Caption;Version=$os.Version;FreeGB=[math]::Round($disk.FreeSpace/1GB,2)} | Format-List'
+};
+var M={batch:"batch",vbscript:"vbscript",jscript:"jscript",wsf:"wsf",hta:"hta",wmi:"powershell",registry:"powershell",automation:"powershell"};
+window.legacyStarter=function(k){var e=document.getElementById("legacyCode");if(e)e.value=S[k]||S.batch;var o=document.getElementById("legacyOutput");if(o)o.textContent="STARTER LOADED — NOT EXECUTED\n\n"+(S[k]||S.batch);};
+window.legacySendToLab=function(){var k=document.getElementById("legacyLang").value,code=(document.getElementById("legacyCode").value||"").trim();if(!code){legacyStarter(k);code=document.getElementById("legacyCode").value;}document.getElementById("rwLang").value=M[k];document.getElementById("rwCode").value=code;document.getElementById("legacyOutput").textContent="TRANSFERRED TO REAL WINDOWS LAB — NOT EXECUTED";var b=document.querySelector('[onclick*="tab(\'labcenter\'"]');if(b)tab("labcenter",b);};
+window.addEventListener("load",function(){legacyStarter("batch");});
+})();
+</script>
+</body></html>
 <script>
 /* V17 REAL FUNCTIONALITY LAYER
    The app never reports simulated execution as real.
