@@ -3,7 +3,6 @@ package com.shreebalaji.scriptingacademy;
 import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
@@ -34,10 +33,6 @@ public class MainActivity extends Activity {
         webView.setWebViewClient(new WebViewClientCompat() {
             @Override public WebResourceResponse shouldInterceptRequest(WebView v, WebResourceRequest r) { return loader.shouldInterceptRequest(r.getUrl()); }
             @Override public WebResourceResponse shouldInterceptRequest(WebView v, String url) { return loader.shouldInterceptRequest(android.net.Uri.parse(url)); }
-            @Override public void onReceivedError(WebView v, WebResourceRequest r, WebResourceError e) {
-                super.onReceivedError(v,r,e);
-                if(r.isForMainFrame()) Toast.makeText(MainActivity.this,"Scripting Academy could not load its local lesson engine.",Toast.LENGTH_LONG).show();
-            }
             @Override public boolean onRenderProcessGone(WebView v, android.webkit.RenderProcessGoneDetail d) {
                 Toast.makeText(MainActivity.this,"Learning engine restarted.",Toast.LENGTH_SHORT).show(); return true;
             }
