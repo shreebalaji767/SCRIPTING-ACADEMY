@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
 
         @JavascriptInterface
         public String version() {
-            return "REAL-LAB-V10";
+            return "REAL-LAB-V12";
         }
     }
 
