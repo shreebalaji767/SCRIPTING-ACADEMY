@@ -169,7 +169,6 @@ if __name__ == "__main__":
     try:
         server.serve_forever()
     except KeyboardInterrupt:
-        print("\
-Stopping REAL LAB agent.")
+        print("\nStopping REAL LAB agent.")
     finally:
         server.server_close()
