@@ -3,10 +3,12 @@ package com.shreebalaji.scriptingacademy;
 import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import androidx.webkit.WebViewAssetLoader;
@@ -18,12 +20,17 @@ public class MainActivity extends Activity {
     public final class AcademyBridge {
         @JavascriptInterface
         public String runtime() {
-            return "{\"platform\":\"Android\",\"engine\":\"Android WebView\",\"realJavaScript\":true,\"nativeToolchain\":\"NDK build-time only\",\"windowsExecution\":false}";
+            return "{\"platform\":\"Android\",\"engine\":\"Android WebView\",\"realJavaScript\":true,\"nativeToolchain\":\"NDK build-time only\",\"windowsExecution\":false,\"offlineAssets\":true}";
         }
 
         @JavascriptInterface
         public String version() {
-            return "REAL-LAB-V14";
+            return "REAL-LAB-V16";
+        }
+
+        @JavascriptInterface
+        public String capabilities() {
+            return "{\"apk\":true,\"webview\":true,\"javascript\":true,\"localStorage\":true,\"windowsAgent\":true}";
         }
     }
 
@@ -47,8 +54,11 @@ public class MainActivity extends Activity {
                 return loader.shouldInterceptRequest(android.net.Uri.parse(url));
             }
 
-            @Override public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
+            @Override public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+                if (request.isForMainFrame()) {
+                    Toast.makeText(MainActivity.this, "Scripting Academy could not load the local lesson engine.", Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override public boolean onRenderProcessGone(WebView view, android.webkit.RenderProcessGoneDetail detail) {
@@ -65,6 +75,7 @@ public class MainActivity extends Activity {
         s.setSupportMultipleWindows(false);
         s.setBuiltInZoomControls(false);
         s.setDisplayZoomControls(false);
+        s.setMediaPlaybackRequiresUserGesture(true);
 
         webView.addJavascriptInterface(new AcademyBridge(), "AcademyNative");
         webView.loadUrl("https://appassets.androidplatform.net/assets/index.html");
