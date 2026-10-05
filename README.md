@@ -29,3 +29,5 @@ This repository includes a GitHub Actions workflow. Push the project to GitHub o
 - README contains a direct APK download URL
 - Actions artifact remains available as a build copy
 - Android APK remains the primary deliverable
+
+**Release status:** V15 release is generated automatically by the successful release build.
