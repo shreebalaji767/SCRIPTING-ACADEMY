@@ -2,11 +2,11 @@
 
 A free Android learning laboratory for programming, scripting, mathematics, systems, networking and administration.
 
-## 📱 Scripting Academy V17 — REAL LAB
+## 📱 Scripting Academy V18 — GOOGLE PLAY READY REAL LAB
 
-**[⬇️ Download V17 APK](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/releases/download/v17.0/app-debug.apk)**
+**V18 is built as an Android App Bundle (AAB) for Google Play and also produces a debug APK.**
 
-> The release is published automatically after a successful GitHub Actions build.
+> The Play release is published automatically after the Play upload signing secrets are configured.
 
 **[🔨 GitHub Actions](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/actions)**
 
@@ -49,6 +49,19 @@ and explains why.
 ## ⚠️ Windows agent security
 
 The Lab Agent executes submitted source code on the Windows PC. Run it only on a trusted machine/LAN and never expose it directly to the public Internet. Keep the generated Lab Token private.
+
+## Google Play publishing
+
+Google Play requires new apps to publish using an Android App Bundle. V18 targets Android 16 / API 36. The GitHub Actions pipeline supports a private Play upload keystore through GitHub Actions secrets; the keystore is never committed to the repository.
+
+Required repository secrets:
+
+- `PLAY_STORE_KEYSTORE_BASE64`
+- `PLAY_STORE_KEYSTORE_PASSWORD`
+- `PLAY_STORE_KEY_ALIAS`
+- `PLAY_STORE_KEY_PASSWORD`
+
+Privacy policy: https://shreebalaji767.github.io/SCRIPTING-ACADEMY/privacy.html
 
 ## No Android Studio required
 
