@@ -68,7 +68,7 @@ LANGUAGES = {
     "assembly-masm": {"name":"Assembly (MASM)", "tool":("ml64","ml"), "kind":"masm", "ext":".asm"},
     "python": {"name":"Python", "tool":("python","py"), "kind":"script", "ext":".py"},
     "javascript": {"name":"JavaScript / Node.js", "tool":("node",), "kind":"script", "ext":".js"},
-    "typescript": {"name":"TypeScript", "tool":("tsx","ts-node","node"), "kind":"typescript", "ext":".ts"},
+    "typescript": {"name":"TypeScript", "tool":("tsx","ts-node"), "kind":"typescript", "ext":".ts"},
     "perl": {"name":"Perl", "tool":("perl",), "kind":"script", "ext":".pl"},
     "ruby": {"name":"Ruby", "tool":("ruby",), "kind":"script", "ext":".rb"},
     "php": {"name":"PHP", "tool":("php",), "kind":"script", "ext":".php"},
@@ -87,6 +87,8 @@ LANGUAGES = {
     "batch": {"name":"Windows Batch", "tool":("cmd.exe",), "kind":"batch", "ext":".bat"},
     "vbscript": {"name":"VBScript", "tool":("cscript.exe",), "kind":"vbscript", "ext":".vbs"},
     "jscript": {"name":"Windows JScript", "tool":("cscript.exe",), "kind":"jscript", "ext":".js"},
+    "wsf": {"name":"Windows Script File (WSF)", "tool":("cscript.exe",), "kind":"wsf", "ext":".wsf"},
+    "hta": {"name":"HTML Application (HTA)", "tool":("mshta.exe",), "kind":"hta", "ext":".hta"},
 }
 
 def available_languages():
@@ -181,8 +183,10 @@ def execute(language, source, tests):
             command=[executable,src]
         elif kind == "batch":
             command=[executable,"/d","/c",src]
-        elif kind in ("vbscript","jscript"):
+        elif kind in ("vbscript","jscript","wsf"):
             command=[executable,"//nologo",src]
+        elif kind == "hta":
+            command=[executable,src]
         elif kind == "typescript":
             if os.path.basename(executable).lower() == "node":
                 return {"ok":False,"executed":False,"error":"TypeScript compiler/runtime not installed. Node.js alone is not a TypeScript compiler."}
@@ -237,7 +241,7 @@ class Handler(BaseHTTPRequestHandler):
                        "gfortran --version","fpc -iV","cobc --version","gnatmake --version","rustc --version",
                        "go version","javac -version","java -version","php --version","ruby --version",
                        "perl --version","tclsh --version","lua -v","pwsh --version","powershell -version",
-                       "cscript //nologo","nasm -v","ml64 /?"]
+                       "cscript //nologo","mshta.exe","nasm -v","ml64 /?"]
                 low=command.lower()
                 if not command or not any(low==x.lower() or low.startswith(x.lower()+" ") for x in allow):
                     return self.send_json(400,{"ok":False,"error":"Command not allowed by the real learning terminal allowlist."})
