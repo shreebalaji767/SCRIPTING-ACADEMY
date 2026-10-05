@@ -27,8 +27,10 @@ import argparse
 HOST = "127.0.0.1"
 PORT = 8765
 TOKEN = secrets.token_urlsafe(18)
-VERSION = "10.0"
+VERSION = "11.0"
 MAX_SOURCE = 200_000
+MAX_TESTS = 8
+MAX_INPUT = 8_000
 TIMEOUT = 8
 
 TOOLS = {
@@ -71,7 +73,7 @@ class Handler(BaseHTTPRequestHandler):
                 "host": HOST,
                 "port": PORT,
                 "tools": {k: {"command": v[0], "path": shutil.which(v[0]), "available": bool(shutil.which(v[0]))} for k, v in TOOLS.items()},
-                "limits": {"max_source_bytes": MAX_SOURCE, "timeout_seconds": TIMEOUT},
+                "limits": {"max_source_bytes": MAX_SOURCE, "timeout_seconds": TIMEOUT, "max_tests": MAX_TESTS, "max_test_input": MAX_INPUT},
             })
             return
         self.send_json(404, {"ok": False, "error": "Use /health or POST /run"})
@@ -91,6 +93,18 @@ class Handler(BaseHTTPRequestHandler):
             body = json.loads(self.rfile.read(length).decode("utf-8"))
             language = str(body.get("language", "")).lower()
             source = str(body.get("source", ""))
+            tests = body.get("tests", [])
+            if not isinstance(tests, list) or len(tests) > MAX_TESTS:
+                raise ValueError("too many tests")
+            clean_tests = []
+            for test in tests:
+                if not isinstance(test, dict):
+                    raise ValueError("invalid test case")
+                inp = str(test.get("input", ""))
+                if len(inp) > MAX_INPUT:
+                    raise ValueError("test input is too large")
+                clean_tests.append({"name": str(test.get("name", "Test")), "input": inp})
+            tests = clean_tests
             if language not in TOOLS:
                 raise ValueError("unsupported language")
             if not source.strip():
@@ -117,6 +131,8 @@ class Handler(BaseHTTPRequestHandler):
                 if result["exit_code"] == 0:
                     result["compile"] = True
                     result["run"] = self.run([str(exe)], root)
+                    if tests:
+                        result["tests"] = self.run_tests([str(exe)], root, tests)
             elif language == "cpp":
                 src, exe = root / "main.cpp", root / "main.exe"
                 src.write_text(source, encoding="utf-8")
@@ -160,8 +176,20 @@ class Handler(BaseHTTPRequestHandler):
                 "duration_ms": round((time.time() - started) * 1000),
             }
 
+    @staticmethod
+    def run_tests(command, cwd, tests):
+        results = []
+        for index, test in enumerate(tests, 1):
+            started = time.time()
+            try:
+                p = subprocess.run(command, cwd=cwd, input=test["input"], capture_output=True, text=True, timeout=TIMEOUT, shell=False)
+                results.append({"index": index, "name": test["name"], "input": test["input"], "exit_code": p.returncode, "stdout": p.stdout[-12000:], "stderr": p.stderr[-12000:], "duration_ms": round((time.time() - started) * 1000)})
+            except subprocess.TimeoutExpired:
+                results.append({"index": index, "name": test["name"], "input": test["input"], "exit_code": 124, "stdout": "", "stderr": "TIMEOUT: process exceeded 8 seconds", "duration_ms": round((time.time() - started) * 1000)})
+        return results
+
 if __name__ == "__main__":
-    print(f"Scripting Academy REAL LAB V10 listening on http://{HOST}:{PORT}")
+    print(f"Scripting Academy REAL LAB V11 listening on http://{HOST}:{PORT}")
     print(f"LAB TOKEN: {TOKEN}")
     print("Use the LAN address only on a trusted network. Anyone with the token can submit code for execution.")
     print("Press Ctrl+C to stop.")
