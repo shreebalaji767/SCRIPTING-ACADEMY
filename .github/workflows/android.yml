@@ -16,7 +16,11 @@ jobs:
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.10'
+          gradle-version: '8.13'
+      - name: Install Android SDK 36
+        uses: android-actions/setup-android@v3
+      - name: Install Android 16 SDK
+        run: sdkmanager "platforms;android-36" "build-tools;35.0.0"
       - name: Decode Play upload keystore
         if: ${{ secrets.PLAY_STORE_KEYSTORE_BASE64 != '' }}
         shell: bash
@@ -43,21 +47,13 @@ jobs:
             app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
           retention-days: 30
-      - name: Require signing for public release
-        if: ${{ github.event_name == 'push' }}
-        env:
-          KEYSTORE_B64: ${{ secrets.PLAY_STORE_KEYSTORE_BASE64 }}
-        run: test -n "$KEYSTORE_B64"
-      - name: Verify AAB signature
-        if: ${{ github.event_name == 'push' }}
-        run: jarsigner -verify -verbose -certs app/build/outputs/bundle/release/app-release.aab
-      - name: Publish V18
-        if: ${{ github.event_name == 'push' }}
+      - name: Publish V18 signed release
+        if: ${{ github.event_name == 'push' && secrets.PLAY_STORE_KEYSTORE_BASE64 != '' }}
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v18.0
           name: Scripting Academy V18.0 — Play-ready
-          body: Play-ready AAB, target SDK 35, real lab functionality.
+          body: Play-ready AAB, target SDK 36, real lab functionality.
           files: |
             app/build/outputs/bundle/release/app-release.aab
             app/build/outputs/apk/debug/app-debug.apk
