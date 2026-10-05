@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
 
         @JavascriptInterface
         public String version() {
-            return "REAL-LAB-V8";
+            return "REAL-LAB-V9";
         }
     }
 
@@ -78,7 +78,7 @@ public class MainActivity extends Activity {
           + "if(window.__realLabV8)return;window.__realLabV8=1;"
           + "var lab=document.getElementById('labcenter');if(!lab)return;"
           + "var box=document.createElement('div');box.className='card v7hero';box.id='realLabV8';"
-          + "box.innerHTML='<h2>⚡ REAL LAB V8</h2>'"
+          + "box.innerHTML='<h2>⚡ REAL LAB V9</h2>'"
           + "+'<p><b>No fake success messages.</b> The Academy now labels exactly what is really executed.</p>'"
           + "+'<div id="rlStatus" class="teacherBox">Checking runtime…</div>'"
           + "+'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">'"
