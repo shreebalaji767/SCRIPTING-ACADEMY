@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Scripting Academy REAL LAB V10 — Windows companion agent.
+Scripting Academy REAL LAB V12 — Windows companion agent.
 
 Run on the Windows PC:
     py tools/windows-lab-agent.py
@@ -27,7 +27,7 @@ import argparse
 HOST = "127.0.0.1"
 PORT = 8765
 TOKEN = secrets.token_urlsafe(18)
-VERSION = "11.0"
+VERSION = "12.0"
 MAX_SOURCE = 200_000
 MAX_TESTS = 8
 MAX_INPUT = 8_000
@@ -189,7 +189,7 @@ class Handler(BaseHTTPRequestHandler):
         return results
 
 if __name__ == "__main__":
-    print(f"Scripting Academy REAL LAB V11 listening on http://{HOST}:{PORT}")
+    print(f"Scripting Academy REAL LAB V12 listening on http://{HOST}:{PORT}")
     print(f"LAB TOKEN: {TOKEN}")
     print("Use the LAN address only on a trusted network. Anyone with the token can submit code for execution.")
     print("Press Ctrl+C to stop.")
