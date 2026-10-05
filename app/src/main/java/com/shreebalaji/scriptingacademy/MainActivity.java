@@ -8,97 +8,52 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Toast;
-
 import androidx.webkit.WebViewAssetLoader;
 import androidx.webkit.WebViewClientCompat;
 
 public class MainActivity extends Activity {
     private WebView webView;
-
     public final class AcademyBridge {
-        @JavascriptInterface
-        public String runtime() {
-            return "{\"platform\":\"Android\",\"engine\":\"Android WebView\",\"realJavaScript\":true,\"nativeToolchain\":\"NDK build-time only\",\"windowsExecution\":false,\"offlineAssets\":true}";
+        @JavascriptInterface public String runtime() {
+            return "{\"platform\":\"Android\",\"engine\":\"Android WebView\",\"realJavaScript\":true,\"windowsExecution\":\"Windows Lab Agent\",\"fakeExecution\":false}";
         }
-
-        @JavascriptInterface
-        public String version() {
-            return "REAL-LAB-V16";
-        }
-
-        @JavascriptInterface
-        public String capabilities() {
-            return "{\"apk\":true,\"webview\":true,\"javascript\":true,\"localStorage\":true,\"windowsAgent\":true}";
+        @JavascriptInterface public String version() { return "REAL-LAB-V17"; }
+        @JavascriptInterface public String capabilities() {
+            return "{\"apk\":true,\"webview\":true,\"javascript\":true,\"localStorage\":true,\"windowsAgent\":true,\"truthfulExecution\":true}";
         }
     }
-
     @Override public void onCreate(Bundle b) {
         super.onCreate(b);
-
         webView = new WebView(this);
         webView.setBackgroundColor(0xFF090B14);
-
         final WebViewAssetLoader loader = new WebViewAssetLoader.Builder()
-                .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))
-                .addPathHandler("/res/", new WebViewAssetLoader.ResourcesPathHandler(this))
-                .build();
-
+            .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))
+            .addPathHandler("/res/", new WebViewAssetLoader.ResourcesPathHandler(this))
+            .build();
         webView.setWebViewClient(new WebViewClientCompat() {
-            @Override public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                return loader.shouldInterceptRequest(request.getUrl());
+            @Override public WebResourceResponse shouldInterceptRequest(WebView v, WebResourceRequest r) { return loader.shouldInterceptRequest(r.getUrl()); }
+            @Override public WebResourceResponse shouldInterceptRequest(WebView v, String url) { return loader.shouldInterceptRequest(android.net.Uri.parse(url)); }
+            @Override public void onReceivedError(WebView v, WebResourceRequest r, WebResourceError e) {
+                super.onReceivedError(v,r,e);
+                if(r.isForMainFrame()) Toast.makeText(MainActivity.this,"Scripting Academy could not load its local lesson engine.",Toast.LENGTH_LONG).show();
             }
-
-            @Override public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-                return loader.shouldInterceptRequest(android.net.Uri.parse(url));
-            }
-
-            @Override public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                super.onReceivedError(view, request, error);
-                if (request.isForMainFrame()) {
-                    Toast.makeText(MainActivity.this, "Scripting Academy could not load the local lesson engine.", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override public boolean onRenderProcessGone(WebView view, android.webkit.RenderProcessGoneDetail detail) {
-                Toast.makeText(MainActivity.this, "Learning engine restarted.", Toast.LENGTH_SHORT).show();
-                return true;
+            @Override public boolean onRenderProcessGone(WebView v, android.webkit.RenderProcessGoneDetail d) {
+                Toast.makeText(MainActivity.this,"Learning engine restarted.",Toast.LENGTH_SHORT).show(); return true;
             }
         });
-
-        WebSettings s = webView.getSettings();
-        s.setJavaScriptEnabled(true);
-        s.setDomStorageEnabled(true);
-        s.setAllowFileAccess(false);
-        s.setAllowContentAccess(false);
-        s.setSupportMultipleWindows(false);
-        s.setBuiltInZoomControls(false);
-        s.setDisplayZoomControls(false);
-        s.setMediaPlaybackRequiresUserGesture(true);
-
-        webView.addJavascriptInterface(new AcademyBridge(), "AcademyNative");
+        WebSettings s=webView.getSettings();
+        s.setJavaScriptEnabled(true); s.setDomStorageEnabled(true);
+        s.setAllowFileAccess(false); s.setAllowContentAccess(false);
+        s.setSupportMultipleWindows(false); s.setBuiltInZoomControls(false);
+        s.setDisplayZoomControls(false); s.setMediaPlaybackRequiresUserGesture(true);
+        webView.addJavascriptInterface(new AcademyBridge(),"AcademyNative");
         webView.loadUrl("https://appassets.androidplatform.net/assets/index.html");
         setContentView(webView);
     }
-
-    private void injectRealLab() {
-        // Reserved for future native UI injection. The current APK loads the bundled Android web app directly.
-    }
-
-    @Override public void onBackPressed() {
-        if (webView != null && webView.canGoBack()) webView.goBack();
-        else super.onBackPressed();
-    }
-
+    @Override public void onBackPressed() { if(webView!=null&&webView.canGoBack()) webView.goBack(); else super.onBackPressed(); }
     @Override protected void onDestroy() {
-        if (webView != null) {
-            webView.removeJavascriptInterface("AcademyNative");
-            webView.stopLoading();
-            webView.clearHistory();
-            webView.destroy();
-            webView = null;
-        }
+        if(webView!=null){webView.removeJavascriptInterface("AcademyNative");webView.stopLoading();webView.clearHistory();webView.destroy();webView=null;}
         super.onDestroy();
     }
 }
