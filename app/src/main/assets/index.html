@@ -372,8 +372,8 @@ wsInit();
       }catch(e){status("REAL JAVASCRIPT ERROR\n"+e.name+": "+e.message);setTruth("REAL ERROR","JavaScript actually executed and threw an error.");}
       return;
     }
-    var map={C:"c","C++":"cpp",Python:"python",JavaScript:"javascript"};
-    if(!map[env]){status("NOT EXECUTED\n"+env+" is a lesson environment, not a local Android compiler. Use C/C++/Python/JavaScript with the Windows Lab Agent for real execution.");setTruth("NOT EXECUTED","No fake execution is performed.");return;}
+    var map={C:"c","C++":"cpp",Python:"python",JavaScript:"javascript",Perl:"perl",PHP:"php",Ruby:"ruby",Tcl:"tcl",Bash:"bash",PowerShell:"powershell",CMD:"batch",VBScript:"vbscript",JScript:"jscript",Fortran:"fortran",Pascal:"pascal",COBOL:"cobol",Ada:"ada",Rust:"rust",Go:"go",Java:"java","C#":"csharp",Kotlin:"kotlin",Swift:"swift",FreeBASIC:"basic","Assembly / NASM":"assembly-nasm","Assembly / MASM":"assembly-masm",Lua:"lua",R:"r",Haskell:"haskell",OCaml:"ocaml","Common Lisp":"lisp",Scheme:"scheme",Erlang:"erlang",Elixir:"elixir",Prolog:"prolog",D:"d","Objective-C":"objective-c",TypeScript:"typescript"};
+    if(!map[env]){status("NOT EXECUTED\n"+env+" is a lesson environment, not a local Android compiler. Use the Windows Lab Agent for real execution. The app never substitutes a simulation for a missing compiler.");setTruth("NOT EXECUTED","No fake execution is performed.");return;}
     qs("rwLang").value=map[env];qs("rwCode").value=code;realRun();
   };
 
