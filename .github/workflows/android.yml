@@ -19,10 +19,6 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.13'
-      - name: Install Android SDK 36
-        uses: android-actions/setup-android@v3
-      - name: Install Android 16 SDK
-        run: sdkmanager "platforms;android-36" "build-tools;35.0.0"
       - name: Decode Play upload keystore
         if: env.HAS_PLAY_SIGNING == 'true'
         shell: bash
