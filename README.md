@@ -2,16 +2,30 @@
 
 A free offline Android learning app for C, scripting languages, mathematics, system administration, networking, algorithms, security, databases, web/APIs, compilers, GUI automation and software engineering.
 
-## 📱 Download Android APK — V14.0
+## 📱 Download Android APK — V15.0
 
-**[⬇️ Download Scripting Academy V14.0 APK](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/actions/runs/37303203911)**
+### ⭐ Permanent APK download
 
-Open the link above → scroll to **Artifacts** → click **Scripting-Academy-APK** to download the APK package.
+**[⬇️ Download Scripting Academy V15.0 APK](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/releases/download/v15.0/app-debug.apk)**
+
+The APK is published as a GitHub Release asset, so this download link does **not** depend on the 90-day GitHub Actions artifact expiration.
 
 > **Android APK only. No Windows EXE.**
->
-> Build verified successfully by GitHub Actions on commit `6b4f8abe89c155b5555dd6fa6b0fc1cf7df176c2`.
+
+### Build status
+
+The project also uploads the APK as a GitHub Actions artifact after every successful build.
+
+**[🔨 Open GitHub Actions](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/actions)**
 
 ## No Android Studio required
 
-This repository includes a GitHub Actions workflow. Upload the project to GitHub, open **Actions → Build APK**, wait for the green check, then download the APK from the workflow's **Artifacts** section.
+This repository includes a GitHub Actions workflow. Push the project to GitHub or run the workflow manually, wait for the green check, then download the APK from the Actions artifact or the permanent GitHub Release.
+
+## V15 upgrade
+
+- Android version bumped to **15.0**
+- Permanent GitHub Release APK publishing
+- README contains a direct APK download URL
+- Actions artifact remains available as a build copy
+- Android APK remains the primary deliverable
