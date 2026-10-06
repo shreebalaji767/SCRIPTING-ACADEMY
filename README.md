@@ -2,13 +2,21 @@
 
 A free Android learning laboratory for programming, scripting, mathematics, systems, networking and administration.
 
-## 📱 Scripting Academy V18 — GOOGLE PLAY READY REAL LAB
+## 📱 Scripting Academy V22 — GOOGLE PLAY BUILD
 
-**V18 is built as an Android App Bundle (AAB) for Google Play and also produces a debug APK.**
-
-> The Play release is published automatically after the Play upload signing secrets are configured.
+**V22 targets Android 16 / API 36 and builds both a debug APK and a Play release AAB.**
 
 **[🔨 GitHub Actions](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/actions)**
+
+### Current build status
+- Android App Bundle: built by GitHub Actions
+- Target SDK: 36
+- Minimum SDK: 24
+- Version: 22.0
+- Application ID: `com.shreebalaji.scriptingacademy`
+- Optional Play signing: GitHub Actions secrets
+- Privacy policy: https://shreebalaji767.github.io/SCRIPTING-ACADEMY/privacy.html
+- Play Store package/checklist: [docs/PLAY-STORE.md](docs/PLAY-STORE.md)
 
 ## What is actually real?
 
@@ -26,19 +34,21 @@ python windows-lab-agent.py --host 0.0.0.0
 
 The agent prints a private Lab Token. Put the Windows PC LAN IP and token into **REAL WORKBENCH**.
 
-The app can then genuinely execute:
+The Windows lab detects the actual tools installed on that computer and can execute supported languages through their real compilers/interpreters. If a required runtime is missing, the app reports **NOT AVAILABLE** rather than inventing an execution result.
 
-- C → GCC
-- C++ → G++
-- Python
-- JavaScript → Node.js
-- approved Windows learning-terminal commands
-
-Compilation/runtime stdout, stderr, exit codes and timeouts come from the real Windows process.
+### Windows legacy learning path
+- Batch / CMD
+- VBScript / Windows Script Host
+- Windows JScript
+- WSF
+- HTA
+- WMI
+- Registry automation
+- Windows automation projects
 
 ### Truth rule
 
-Scripting Academy V17 does **not** turn an analysis into a fake execution result.
+Scripting Academy does **not** turn an analysis into a fake execution result.
 
 If something cannot execute, the app says:
 
@@ -52,7 +62,7 @@ The Lab Agent executes submitted source code on the Windows PC. Run it only on a
 
 ## Google Play publishing
 
-Google Play requires new apps to publish using an Android App Bundle. V18 targets Android 16 / API 36. The GitHub Actions pipeline supports a private Play upload keystore through GitHub Actions secrets; the keystore is never committed to the repository.
+The repository supports a private Play upload keystore through GitHub Actions secrets. The keystore itself is never committed to the repository.
 
 Required repository secrets:
 
@@ -61,8 +71,10 @@ Required repository secrets:
 - `PLAY_STORE_KEY_ALIAS`
 - `PLAY_STORE_KEY_PASSWORD`
 
-Privacy policy: https://shreebalaji767.github.io/SCRIPTING-ACADEMY/privacy.html
+The dedicated **Publish Signed Scripting Academy AAB** workflow refuses to publish when these secrets are missing and verifies the resulting AAB with `jarsigner`.
+
+See **[Google Play Store Package](docs/PLAY-STORE.md)** for the store listing copy and release checklist.
 
 ## No Android Studio required
 
-GitHub Actions builds the APK automatically.
+GitHub Actions builds the APK and AAB automatically.
