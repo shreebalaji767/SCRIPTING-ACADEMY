@@ -51,9 +51,9 @@ Advanced Windows / Systems
 
 Math is introduced **when the IT topic needs it**, rather than forcing beginners to study months of mathematics first.
 
-## 📱 Scripting Academy V24 — GOOGLE PLAY BUILD
+## 📱 Scripting Academy V25 — GOOGLE PLAY BUILD
 
-**V24 targets Android 16 / API 36 and builds both a debug APK and a Play release AAB.**
+**V25 targets Android 16 / API 36 and builds both a debug APK and a Play release AAB.**
 
 **[🔨 GitHub Actions](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/actions)**
 
@@ -61,7 +61,7 @@ Math is introduced **when the IT topic needs it**, rather than forcing beginners
 - Android App Bundle: built by GitHub Actions
 - Target SDK: 36
 - Minimum SDK: 24
-- Version: 24.0
+- Version: 25.0
 - Application ID: `com.shreebalaji.scriptingacademy`
 - Optional Play signing: GitHub Actions secrets
 - Privacy policy: https://shreebalaji767.github.io/SCRIPTING-ACADEMY/privacy.html
