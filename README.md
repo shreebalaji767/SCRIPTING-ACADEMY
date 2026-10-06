@@ -2,6 +2,55 @@
 
 A free Android learning laboratory for programming, scripting, mathematics, systems, networking and administration.
 
+## 📚 Learn IT / System Administration — IDIOT MODE
+
+A beginner-first course is being built directly in this repository so anyone can learn from zero without assuming prior IT knowledge.
+
+The teaching style is deliberately simple, practical and memorable:
+
+> **No jargon without an explanation. No fake labs. One concept at a time. Real Windows practice where possible.**
+
+### Start here
+
+1. **[Lesson 1 — Computer Basics](lessons/IT-SYSTEM-ADMIN/01-computer-basics.md)**
+2. **[Lesson 2 — What Happens When You Double-Click an `.exe`?](lessons/IT-SYSTEM-ADMIN/02-programs-processes-exe.md)**
+
+### Course direction
+
+The planned path goes from:
+
+```text
+ZERO KNOWLEDGE
+      ↓
+Computer Fundamentals
+      ↓
+Windows Fundamentals
+      ↓
+CMD / Batch
+      ↓
+PowerShell
+      ↓
+Troubleshooting
+      ↓
+Networking
+      ↓
+Windows Server
+      ↓
+DNS / DHCP
+      ↓
+Active Directory
+      ↓
+Group Policy
+      ↓
+Windows Security
+      ↓
+Automation
+      ↓
+Advanced Windows / Systems
+```
+
+Math is introduced **when the IT topic needs it**, rather than forcing beginners to study months of mathematics first.
+
 ## 📱 Scripting Academy V23 — GOOGLE PLAY BUILD
 
 **V23 targets Android 16 / API 36 and builds both a debug APK and a Play release AAB.**
