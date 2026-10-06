@@ -54,7 +54,7 @@ jobs:
       - name: Upload signed AAB
         uses: actions/upload-artifact@v4
         with:
-          name: Scripting-Academy-V21-Play-Signed
+          name: Scripting-Academy-V22-Play-Signed
           path: app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
           retention-days: 30
@@ -62,8 +62,8 @@ jobs:
       - name: Publish signed GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v21.0
-          name: Scripting Academy V21.0 — Signed Play Build
-          body: Signed Play upload AAB for Scripting Academy V21.0. Target SDK 36.
+          tag_name: v22.0
+          name: Scripting Academy V22.0 — Signed Play Build
+          body: Signed Play upload AAB for Scripting Academy V22.0. Target SDK 36.
           files: app/build/outputs/bundle/release/app-release.aab
           overwrite_files: true
