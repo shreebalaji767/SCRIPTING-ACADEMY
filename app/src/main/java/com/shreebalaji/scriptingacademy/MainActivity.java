@@ -19,11 +19,11 @@ public class MainActivity extends Activity {
 
     public final class AcademyBridge {
         @JavascriptInterface public String runtime() {
-            return "{\"platform\":\"Android\",\"engine\":\"Android WebView\",\"realJavaScript\":true,\"windowsExecution\":\"Windows Lab Agent\",\"fakeExecution\":false}";
+            return "{\"platform\":\"Android\",\"engine\":\"Android WebView\",\"realJavaScript\":true,\"windowsExecution\":\"Windows Lab Agent\",\"fakeExecution\":false,\"androidApi\":"+android.os.Build.VERSION.SDK_INT+"}";
         }
-        @JavascriptInterface public String version() { return "REAL-LAB-V23"; }
+        @JavascriptInterface public String version() { return "REAL-LAB-V24"; }
         @JavascriptInterface public String capabilities() {
-            return "{\"apk\":true,\"webview\":true,\"javascript\":true,\"localStorage\":true,\"windowsAgent\":true,\"truthfulExecution\":true,\"playTargetApi\":36}";
+            return "{\"apk\":true,\"webview\":true,\"javascript\":true,\"localStorage\":true,\"windowsAgent\":true,\"truthfulExecution\":true,\"playTargetApi\":36,\"nativeBuildInfo\":true}";
         }
     }
 
