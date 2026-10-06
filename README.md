@@ -2,9 +2,9 @@
 
 A free Android learning laboratory for programming, scripting, mathematics, systems, networking and administration.
 
-## 📱 Scripting Academy V22 — GOOGLE PLAY BUILD
+## 📱 Scripting Academy V23 — GOOGLE PLAY BUILD
 
-**V22 targets Android 16 / API 36 and builds both a debug APK and a Play release AAB.**
+**V23 targets Android 16 / API 36 and builds both a debug APK and a Play release AAB.**
 
 **[🔨 GitHub Actions](https://github.com/shreebalaji767/SCRIPTING-ACADEMY/actions)**
 
@@ -12,7 +12,7 @@ A free Android learning laboratory for programming, scripting, mathematics, syst
 - Android App Bundle: built by GitHub Actions
 - Target SDK: 36
 - Minimum SDK: 24
-- Version: 22.0
+- Version: 23.0
 - Application ID: `com.shreebalaji.scriptingacademy`
 - Optional Play signing: GitHub Actions secrets
 - Privacy policy: https://shreebalaji767.github.io/SCRIPTING-ACADEMY/privacy.html
