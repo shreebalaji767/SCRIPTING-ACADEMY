@@ -347,6 +347,40 @@ window.legacySendToLab=function(){var k=document.getElementById("legacyLang").va
 window.addEventListener("load",function(){legacyStarter("batch");});
 })();
 </script>
+<script>
+/* V25 REAL LAB CONTROL PANEL */
+(function(){
+  function q(id){return document.getElementById(id);}
+  function base(){return (q("rwUrl")?.value||"").trim().replace(/\/$/,"");}
+  function token(){return q("rwToken")?.value||"";}
+  window.realToolchainInventory=function(){
+    var out=q("rwOutput"),b=base(),t=token();
+    if(!b||!t){if(out)out.textContent="NOT EXECUTED\nEnter the Windows Lab Agent address and token first.";return;}
+    if(out)out.textContent="CHECKING REAL WINDOWS TOOLCHAINS...";
+    fetch(b+"/toolchains",{headers:{"X-Academy-Token":t}})
+      .then(async function(r){
+        var j=await r.json();
+        if(!r.ok){if(out)out.textContent="NOT EXECUTED\n"+JSON.stringify(j,null,2);return;}
+        var tools=j.toolchains||j.tools||j,lines=["REAL WINDOWS TOOLCHAIN INVENTORY","================================",""];
+        if(Array.isArray(tools)){
+          tools.forEach(function(x){lines.push((x.name||x.language||"tool")+" : "+(x.available?"AVAILABLE":"NOT AVAILABLE")+(x.path?" — "+x.path:""));});
+        }else{
+          Object.keys(tools||{}).forEach(function(k){var v=tools[k];lines.push(k+" : "+((v&&v.available)||v===true?"AVAILABLE":"NOT AVAILABLE"));});
+        }
+        if(out)out.textContent=lines.join("\n");
+        if(typeof setTruth==="function")setTruth("CONNECTED","Toolchain inventory came from the real Windows Lab Agent.");
+      })
+      .catch(function(e){if(out)out.textContent="NOT EXECUTED\n"+e+"\n\nNo Windows Lab response.";});
+  };
+  window.addEventListener("load",function(){
+    var host=q("realWorkbench");
+    if(!host||q("v25LabPanel"))return;
+    var d=document.createElement("div");d.id="v25LabPanel";d.className="card";d.style.marginTop="12px";
+    d.innerHTML="<b>🧪 V25 REAL LAB CONTROL</b><p class='muted'>This panel never invents toolchains. It asks the real Windows Lab Agent what is installed on the selected PC.</p><button class='btn' onclick='realToolchainInventory()'>🔎 Detect Real Toolchains</button>";
+    host.appendChild(d);
+  });
+})();
+</script>
 </body></html>
 <script>
 /* V17 REAL FUNCTIONALITY LAYER
