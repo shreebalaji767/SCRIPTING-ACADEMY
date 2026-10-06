@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
         s.setDisplayZoomControls(false);
         s.setMediaPlaybackRequiresUserGesture(true);
         s.setJavaScriptCanOpenWindowsAutomatically(false);
-        s.setSafeBrowsingEnabled(true);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) s.setSafeBrowsingEnabled(true);
 
         webView.addJavascriptInterface(new AcademyBridge(), "AcademyNative");
         webView.loadUrl("https://appassets.androidplatform.net/assets/index.html");
