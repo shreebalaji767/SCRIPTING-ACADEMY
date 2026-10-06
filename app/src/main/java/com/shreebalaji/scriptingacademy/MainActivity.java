@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.JavascriptInterface;
-import android.webkit.SafeBrowsingResponse;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
@@ -22,7 +21,7 @@ public class MainActivity extends Activity {
         @JavascriptInterface public String runtime() {
             return "{\"platform\":\"Android\",\"engine\":\"Android WebView\",\"realJavaScript\":true,\"windowsExecution\":\"Windows Lab Agent\",\"fakeExecution\":false}";
         }
-        @JavascriptInterface public String version() { return "REAL-LAB-V22"; }
+        @JavascriptInterface public String version() { return "REAL-LAB-V23"; }
         @JavascriptInterface public String capabilities() {
             return "{\"apk\":true,\"webview\":true,\"javascript\":true,\"localStorage\":true,\"windowsAgent\":true,\"truthfulExecution\":true,\"playTargetApi\":36}";
         }
@@ -62,11 +61,6 @@ public class MainActivity extends Activity {
                     startActivity(new Intent(Intent.ACTION_VIEW, u));
                 } catch (Exception ignored) {}
                 return true;
-            }
-
-            @Override public void onSafeBrowsingHit(WebView view, WebResourceRequest request,
-                    int threatType, SafeBrowsingResponse callback) {
-                callback.backToSafety(true);
             }
 
             @Override public boolean onRenderProcessGone(WebView v, android.webkit.RenderProcessGoneDetail d) {
