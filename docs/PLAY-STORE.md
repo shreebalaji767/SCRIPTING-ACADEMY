@@ -1,9 +1,9 @@
-# Google Play Store Package — Scripting Academy V22
+# Google Play Store Package — Scripting Academy V24
 
 ## App identity
 - **App name:** Scripting Academy
 - **Application ID:** `com.shreebalaji.scriptingacademy`
-- **Version:** 22.0
+- **Version:** 24.0
 - **Version code:** 22
 - **Category:** Education
 - **Pricing:** Free
